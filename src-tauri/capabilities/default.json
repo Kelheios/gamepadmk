@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["settings", "keyboard", "toast"],
+  "permissions": [
+    "autostart:default",
+    "core:default",
+    "core:window:allow-hide",
+    "core:window:allow-set-size",
+    "core:window:allow-show",
+    "os:default",
+    "positioner:default",
+    "store:default"
+  ],
+  "platforms": ["linux", "macOS", "windows"]
+}

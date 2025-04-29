@@ -1,0 +1,13 @@
+.pulse-animation {
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    border: 2px solid #fff;
+  }
+
+  100% {
+    border: 4px solid #f00;
+  }
+}

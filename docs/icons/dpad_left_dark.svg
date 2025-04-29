@@ -1,0 +1,7 @@
+<svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 100 100" stroke-linecap="round" stroke-linejoin="round"
+    xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M 40 21.43 L 59.52 21.43 L 59.52 40.48 L 78.57 40.48 L 78.57 59.52 L 59.52 59.52 L 59.52 78.57 L 40.48 78.57 L 40.48 59.52 L 21.43 59.52 L 21.43 40.48 L 40.48 40.48 Z"
+        fill="none" stroke="white" stroke-width="4" />
+    <rect x="27" y="46" width="8" height="8" fill="white" />
+</svg>

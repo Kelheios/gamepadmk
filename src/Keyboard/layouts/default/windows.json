@@ -1,0 +1,132 @@
+[
+  [
+    {
+      "value": "ESCAPE",
+      "label": "Esc",
+      "size": 1
+    },
+    {
+      "value": "F1",
+      "size": 1,
+      "offsetLeft": 1
+    },
+    {
+      "value": "F2",
+      "size": 1
+    },
+    {
+      "value": "F3",
+      "size": 1
+    },
+    {
+      "value": "F4",
+      "size": 1
+    },
+    {
+      "value": "F5",
+      "size": 1,
+      "offsetLeft": 0.5
+    },
+    {
+      "value": "F6",
+      "size": 1
+    },
+    {
+      "value": "F7",
+      "size": 1
+    },
+    {
+      "value": "F8",
+      "size": 1
+    },
+    {
+      "value": "F9",
+      "size": 1,
+      "offsetLeft": 0.5
+    },
+    {
+      "value": "F10",
+      "size": 1
+    },
+    {
+      "value": "F11",
+      "size": 1
+    },
+    {
+      "value": "F12",
+      "size": 1
+    }
+  ],
+  [
+    { "value": "`", "valueAlt": "~", "size": 1 },
+    { "value": "1", "valueAlt": "!", "size": 1 },
+    { "value": "2", "valueAlt": "@", "size": 1 },
+    { "value": "3", "valueAlt": "#", "size": 1 },
+    { "value": "4", "valueAlt": "$", "size": 1 },
+    { "value": "5", "valueAlt": "%", "size": 1 },
+    { "value": "6", "valueAlt": "^", "size": 1 },
+    { "value": "7", "valueAlt": "&", "size": 1 },
+    { "value": "8", "valueAlt": "*", "size": 1 },
+    { "value": "9", "valueAlt": "(", "size": 1 },
+    { "value": "0", "valueAlt": ")", "size": 1 },
+    { "value": "-", "valueAlt": "_", "size": 1 },
+    { "value": "=", "valueAlt": "+", "size": 1 },
+    { "value": "BACKSPACE", "label": "Backspace", "size": 2 }
+  ],
+  [
+    { "value": "TAB", "label": "Tab", "size": 1.5 },
+    { "value": "q", "valueAlt": "Q", "size": 1 },
+    { "value": "w", "valueAlt": "W", "size": 1 },
+    { "value": "e", "valueAlt": "E", "size": 1 },
+    { "value": "r", "valueAlt": "R", "size": 1 },
+    { "value": "t", "valueAlt": "T", "size": 1 },
+    { "value": "y", "valueAlt": "Y", "size": 1 },
+    { "value": "u", "valueAlt": "U", "size": 1 },
+    { "value": "i", "valueAlt": "I", "size": 1 },
+    { "value": "o", "valueAlt": "O", "size": 1 },
+    { "value": "p", "valueAlt": "P", "size": 1 },
+    { "value": "[", "valueAlt": "{", "size": 1 },
+    { "value": "]", "valueAlt": "}", "size": 1 },
+    { "value": "\\", "valueAlt": "|", "size": 1.5 }
+  ],
+  [
+    { "value": "CAPS", "label": "Caps", "size": 1.75 },
+    { "value": "a", "valueAlt": "A", "size": 1 },
+    { "value": "s", "valueAlt": "S", "size": 1 },
+    { "value": "d", "valueAlt": "D", "size": 1 },
+    { "value": "f", "valueAlt": "F", "size": 1 },
+    { "value": "g", "valueAlt": "G", "size": 1 },
+    { "value": "h", "valueAlt": "H", "size": 1 },
+    { "value": "j", "valueAlt": "J", "size": 1 },
+    { "value": "k", "valueAlt": "K", "size": 1 },
+    { "value": "l", "valueAlt": "L", "size": 1 },
+    { "value": ";", "valueAlt": ":", "size": 1 },
+    { "value": "'", "valueAlt": "\"", "size": 1 },
+    { "value": "ENTER", "label": "Enter", "size": 2.25 }
+  ],
+  [
+    { "value": "SHIFT", "label": "Shift", "icon": "TRIGGER_LEFT", "size": 2.25 },
+    { "value": "z", "valueAlt": "Z", "size": 1 },
+    { "value": "x", "valueAlt": "X", "size": 1 },
+    { "value": "c", "valueAlt": "C", "size": 1 },
+    { "value": "v", "valueAlt": "V", "size": 1 },
+    { "value": "b", "valueAlt": "B", "size": 1 },
+    { "value": "n", "valueAlt": "N", "size": 1 },
+    { "value": "m", "valueAlt": "M", "size": 1 },
+    { "value": ",", "valueAlt": "<", "size": 1 },
+    { "value": ".", "valueAlt": ">", "size": 1 },
+    { "value": "/", "valueAlt": "?", "size": 1 },
+    { "value": "SHIFT", "label": "Shift", "icon": "TRIGGER_LEFT", "size": 2.75 }
+  ],
+  [
+    { "value": "CONTROL", "label": "Ctrl", "size": 1 },
+    { "value": "WINDOWS", "label": "", "icon": "WINDOWS", "size": 1 },
+    { "value": "ALT", "label": "Alt", "size": 1 },
+    { "value": "SPACE", "size": 7 },
+    { "value": "ALT", "label": "Alt", "size": 1 },
+    { "value": "WINDOWS", "label": "", "icon": "WINDOWS", "size": 1 },
+    { "value": "MENU", "label": "Menu", "icon": "MENU", "size": 1 },
+    { "value": "CONTROL", "label": "Ctrl", "size": 1 },
+    { "value": "DELETE", "label": "Del", "size": 1 }
+  ]
+]
