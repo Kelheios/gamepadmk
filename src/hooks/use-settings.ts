@@ -9,6 +9,7 @@ import {
 const SettingDefault: SettingType = {
   [SettingKey.AutoStart]: false,
   [SettingKey.DarkMode]: false,
+  [SettingKey.SwapDpadRightStick]: false,
   [SettingKey.Keyboard]: true,
   [SettingKey.KeyboardBaseKeySize]: 50,
   [SettingKey.ModeChangeHotKeyButtons]: [ModeChangeHotKeyButtonsOption.Back],

@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "identifier": "com.gamepadmk.app",
+  "identifier": "com.kelheios.gamepadmk.modified",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -10,7 +10,7 @@
   "app": {
     "windows": [
       {
-        "title": "GamePadMK - Settings",
+        "title": "GamePadMK Modified - Settings",
         "label": "settings",
         "url": "index.html?window=settings",
         "width": 800,
@@ -36,5 +36,6 @@
     "macOS": {
       "signingIdentity": "-"
     }
-  }
+  },
+  "productName": "GamePadMK Modified"
 }

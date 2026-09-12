@@ -68,3 +68,24 @@ impl VirtualMouseMoveState {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn binary_direction_preserves_existing_deadzone_and_scaling() {
+        let mut state = VirtualMouseMoveState::init();
+        for input in [0, 2000, -2000, 11999, -11999] {
+            state.set_state_from_joystick_input(input, input);
+            state.set_state_to_binary_direction();
+            assert_eq!((state.x, state.y), (0, 0));
+        }
+        state.set_state_from_joystick_input(12000, -12000);
+        state.set_state_to_binary_direction();
+        assert_eq!((state.x, state.y), (1, -1));
+        state.set_state_from_joystick_input(i16::MIN, i16::MAX);
+        state.set_state_to_binary_direction();
+        assert_eq!((state.x, state.y), (-1, 1));
+    }
+}
