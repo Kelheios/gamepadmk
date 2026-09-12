@@ -27,7 +27,7 @@ impl ArrowState {
         // Release ALL old directions before pressing any new ones, including reversals.
         for press in [false, true] {
             for (index, wanted) in desired.iter().copied().enumerate() {
-                if press && self.held[index ^ 1] {
+                if press && self.held[index ^ 1] && !desired[index ^ 1] {
                     continue;
                 }
                 if wanted == press && self.held[index] != wanted && send(index, wanted) {
@@ -104,6 +104,29 @@ mod tests {
         });
         assert_eq!(events, vec![(0, false), (3, false)]);
         assert_eq!(state.held, [false; 4]);
+    }
+
+    #[test]
+    fn standard_dpad_can_hold_opposite_buttons() {
+        let mut state = ArrowState::default();
+        state.update([true; 4], |_, _| true);
+        assert_eq!(state.held, [true; 4]);
+        state.update([false; 4], |_, _| true);
+        assert_eq!(state.held, [false; 4]);
+    }
+
+    #[test]
+    fn failed_release_blocks_opposite_press_until_retried() {
+        let mut state = ArrowState::default();
+        state.update(from_axes(1, 0), |_, _| true);
+        let mut events = Vec::new();
+        state.update(from_axes(-1, 0), |key, press| {
+            events.push((key, press));
+            false
+        });
+        assert_eq!(events, vec![(3, false)]);
+        state.update(from_axes(-1, 0), |_, _| true);
+        assert_eq!(state.held, from_axes(-1, 0));
     }
 
     #[test]
