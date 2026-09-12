@@ -105,6 +105,10 @@ export default function Settings() {
       <Card>
         <Flex gap="2" direction={"column"}>
           <Toggle
+            settingKey={SettingKey.SwapDpadRightStick}
+            label="Swap D-pad and Right Stick"
+          />
+          <Toggle
             settingKey={SettingKey.Keyboard}
             label="Show on screen keyboard when control mode is active"
           />

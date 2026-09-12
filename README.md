@@ -1,6 +1,6 @@
 <h1 align="center">
   <img valign="middle" alt="GamePadMK" height="128" src="docs/logo.png">
-  GamePadMK
+  GamePadMK Modified
   </br>
 </h1>
 
@@ -27,6 +27,11 @@ GamePadMK is compatible with most dual-stick gamepads/controllers, whether conne
 
 ### Installation
 
+For **GamePadMK Modified** on Windows (x64), open this fork's **Actions** tab → **Build GamePadMK Modified Windows** → a successful run → **Artifacts** → **GamePadMK-Modified-Windows-x64**. Extract the downloaded ZIP and double-click **GamePadMK-Modified-Setup.exe**, then launch **GamePadMK Modified** from Start. No development tools are required.
+
+The workflow also supports **Run workflow** once present on the default branch. This custom build is unsigned. Windows may show an unknown-publisher warning; verify that you downloaded your own successful build before choosing to run it. The modified app uses a separate application identifier and settings directory; it does not automatically import the original app's settings. Avoid running both applications together, as both would process the controller.
+
+
 You can download the latest version of GamePadMK from the [Releases](https://github.com/jasecara/gamepadmk/releases/latest) page. Simply run the installer for your platform (.msi or .exe for Windows, .dmg for Mac) to get started.
 
 You can also build the project yourself from source. See the [Building Locally](#building-locally) section for instructions.
@@ -50,6 +55,8 @@ You can also build the project yourself from source. See the [Building Locally](
 | <picture><source media="(prefers-color-scheme: dark)" srcset="./docs/icons/stick_left_dark.svg" /><img valign="middle" alt="Joystick Left" src="./docs/icons/stick_left.svg" width="36" height="36" /></picture>                                                                                                                                                                                         | Left Joystick        | Move Mouse Pointer               |
 | <picture><source media="(prefers-color-scheme: dark)" srcset="./docs/icons/stick_left_press_dark.svg" /><img valign="middle" alt="Joystick Left Click" src="./docs/icons/stick_left_press.svg" width="36" height="36" /></picture>                                                                                                                                                                       | Left Joystick Click  | Change Mouse Speed               |
 
+The default controls above are unchanged: **Right Joystick → Move Around Keyboard**, **D-pad → Arrow Keys**. Enable **Swap D-pad and Right Stick** to exchange these two functions; stick clicks and all other mappings remain unchanged.
+
 ### Settings
 
 You can access the settings by clicking the GamePadMK icon in the taskbar or system tray.
@@ -59,6 +66,7 @@ You can access the settings by clicking the GamePadMK icon in the taskbar or sys
 - **Show Notifications**: Enable or disable notification when the keyboard is shown or hidden.
 - **Mode Change Buttons**: Choose the buttons used to toggle control mode on and off.
 - **Show On-Screen Keyboard**: Show or hide the on-screen keyboard when control mode is active.
+- **Swap D-pad and Right Stick**: Off by default (Standard). When enabled (Swapped), the D-pad navigates the on-screen keyboard with the existing hold-repeat timing, and the right stick holds system arrow keys until returned to neutral. Uses the existing joystick deadzone/scaling, with independent horizontal and vertical directions. Saved automatically; settings files without this field use Standard mode.
 - **Key Size**: Adjust the size of the on-screen keyboard keys.
 
 ## Roadmap

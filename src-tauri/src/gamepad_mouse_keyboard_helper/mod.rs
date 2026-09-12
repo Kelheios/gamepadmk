@@ -1,3 +1,4 @@
+mod arrow_keys;
 mod control_mode;
 mod gamepad;
 mod key_codes;
@@ -17,6 +18,10 @@ use std::{sync::Mutex, time::Duration};
 use tauri::{webview::PageLoadEvent, Emitter, Listener, Manager};
 use virtual_keyboard::KeyboardNavigationState;
 use virtual_mouse::VirtualMouseMoveState;
+
+pub fn release_arrow_keys_on_exit() {
+    arrow_keys::shutdown();
+}
 
 const REFRESH_RATE: u64 = 1000;
 const WAIT_TIME_MS: u64 = 1000 / REFRESH_RATE;
@@ -71,7 +76,11 @@ pub fn init_thread() {
     let setting_manager = SettingManager::init("settings.json");
 
     let app_state: tauri::State<'_, Mutex<AppState>> = app.try_state::<Mutex<AppState>>().unwrap();
+    let mut swapped = false;
     loop {
+        if arrow_keys::is_stopped() {
+            break;
+        }
         if let Some(event) = sdl_context.event_pump().unwrap().poll_event() {
             match event {
                 Event::ControllerDeviceAdded { which, .. } => {
@@ -86,6 +95,11 @@ pub fn init_thread() {
                 }
                 Event::ControllerDeviceRemoved { which, .. } => {
                     controllers.retain(|controller| controller.instance_id() != which);
+                    arrow_keys::update(&mut enigo, [false; 4]);
+                    gamepad_state = GamePad::init_state();
+                    keyboard_virtual_mouse_state = VirtualMouseMoveState::init();
+                    mouse_virtual_mouse_state.x = 0;
+                    mouse_virtual_mouse_state.y = 0;
                 }
                 Event::ControllerButtonDown { button, .. } => {
                     gamepad_state.buttons.press(button);
@@ -142,6 +156,25 @@ pub fn init_thread() {
             control_mode_state.move_to_next_mode();
             gamepad_state.buttons.bulk_ack(hot_key_buttons.clone());
         }
+
+        let next_swapped = setting_manager
+            .get_value(Settings::SwapDpadRightStick)
+            .as_bool()
+            .unwrap_or(false);
+        if next_swapped != swapped || control_mode_state.mode == ControlMode::Off {
+            arrow_keys::update(&mut enigo, [false; 4]);
+            keyboard_virtual_mouse_state.x = 0;
+            keyboard_virtual_mouse_state.y = 0;
+            if next_swapped != swapped {
+                // Re-evaluate held inputs with the new routing, after releasing old output.
+                gamepad_state.sticks.right.ack_pending = true;
+            }
+        }
+        if control_mode_state.ack_pending && control_mode_state.mode == ControlMode::GamePadControl
+        {
+            gamepad_state.sticks.right.ack_pending = true;
+        }
+        swapped = next_swapped;
 
         if control_mode_state.mode == ControlMode::GamePadControl {
             match gamepad_state.buttons.a {
@@ -235,99 +268,38 @@ pub fn init_thread() {
                 _ => (),
             }
 
-            match gamepad_state.sticks.right {
-                MotionStateXY {
-                    x,
-                    y,
-                    ack_pending: true,
-                } => {
-                    keyboard_virtual_mouse_state.set_state_from_joystick_input(x, y);
+            let dpad = [
+                gamepad_state.buttons.dpad_up.pressed,
+                gamepad_state.buttons.dpad_down.pressed,
+                gamepad_state.buttons.dpad_left.pressed,
+                gamepad_state.buttons.dpad_right.pressed,
+            ];
+            if swapped {
+                let mut stick = VirtualMouseMoveState::init();
+                stick.set_state_from_joystick_input(
+                    gamepad_state.sticks.right.x,
+                    gamepad_state.sticks.right.y,
+                );
+                stick.set_state_to_binary_direction();
+                arrow_keys::update(&mut enigo, arrow_keys::from_axes(stick.x, stick.y));
+                keyboard_virtual_mouse_state.x = i32::from(dpad[3]) - i32::from(dpad[2]);
+                keyboard_virtual_mouse_state.y = i32::from(dpad[1]) - i32::from(dpad[0]);
+                gamepad_state.sticks.right.ack();
+            } else {
+                if gamepad_state.sticks.right.ack_pending {
+                    keyboard_virtual_mouse_state.set_state_from_joystick_input(
+                        gamepad_state.sticks.right.x,
+                        gamepad_state.sticks.right.y,
+                    );
                     keyboard_virtual_mouse_state.set_state_to_binary_direction();
-
                     gamepad_state.sticks.right.ack();
                 }
-                _ => (),
+                arrow_keys::update(&mut enigo, dpad);
             }
-
-            match gamepad_state.buttons.dpad_up {
-                PressState {
-                    ack_pending: true,
-                    last_pressed: _,
-                    pressed,
-                    released,
-                } => match (pressed, released) {
-                    (true, false) => {
-                        let _ = enigo.key(enigo::Key::UpArrow, enigo::Direction::Press);
-                        gamepad_state.buttons.dpad_up.ack();
-                    }
-                    (false, true) => {
-                        let _ = enigo.key(enigo::Key::UpArrow, enigo::Direction::Release);
-                        gamepad_state.buttons.dpad_up.ack();
-                    }
-                    _ => (),
-                },
-                _ => (),
-            }
-
-            match gamepad_state.buttons.dpad_down {
-                PressState {
-                    ack_pending: true,
-                    last_pressed: _,
-                    pressed,
-                    released,
-                } => match (pressed, released) {
-                    (true, false) => {
-                        let _ = enigo.key(enigo::Key::DownArrow, enigo::Direction::Press);
-                        gamepad_state.buttons.dpad_down.ack();
-                    }
-                    (false, true) => {
-                        let _ = enigo.key(enigo::Key::DownArrow, enigo::Direction::Release);
-                        gamepad_state.buttons.dpad_down.ack();
-                    }
-                    _ => (),
-                },
-                _ => (),
-            }
-
-            match gamepad_state.buttons.dpad_left {
-                PressState {
-                    ack_pending: true,
-                    last_pressed: _,
-                    pressed,
-                    released,
-                } => match (pressed, released) {
-                    (true, false) => {
-                        let _ = enigo.key(enigo::Key::LeftArrow, enigo::Direction::Press);
-                        gamepad_state.buttons.dpad_left.ack();
-                    }
-                    (false, true) => {
-                        let _ = enigo.key(enigo::Key::LeftArrow, enigo::Direction::Release);
-                        gamepad_state.buttons.dpad_left.ack();
-                    }
-                    _ => (),
-                },
-                _ => (),
-            }
-
-            match gamepad_state.buttons.dpad_right {
-                PressState {
-                    ack_pending: true,
-                    last_pressed: _,
-                    pressed,
-                    released,
-                } => match (pressed, released) {
-                    (true, false) => {
-                        let _ = enigo.key(enigo::Key::RightArrow, enigo::Direction::Press);
-                        gamepad_state.buttons.dpad_right.ack();
-                    }
-                    (false, true) => {
-                        let _ = enigo.key(enigo::Key::RightArrow, enigo::Direction::Release);
-                        gamepad_state.buttons.dpad_right.ack();
-                    }
-                    _ => (),
-                },
-                _ => (),
-            }
+            gamepad_state.buttons.dpad_up.ack();
+            gamepad_state.buttons.dpad_down.ack();
+            gamepad_state.buttons.dpad_left.ack();
+            gamepad_state.buttons.dpad_right.ack();
 
             match gamepad_state.triggers.left {
                 MotionStateZ {

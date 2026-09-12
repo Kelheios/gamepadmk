@@ -8,6 +8,7 @@ use tauri_plugin_store::StoreExt;
 use crate::helpers::get_app_handle;
 
 pub enum Settings {
+    SwapDpadRightStick,
     Keyboard,
     ModeChangeHotKeyButtons,
     ModeChangeHotKeyDurationMs,
@@ -28,6 +29,7 @@ impl SettingManager {
 
     fn defaults(&self) -> Value {
         let mut defaults = Value::default();
+        defaults["setting_swap_dpad_right_stick"] = Value::Bool(false);
         defaults["setting_keyboard"] = Value::Bool(true);
         defaults["setting_mode_change_hot_key_buttons"] =
             Value::Array(vec![Value::String("BACK".to_string())]);
@@ -39,6 +41,7 @@ impl SettingManager {
 
     pub fn get_value(&self, key: Settings) -> Value {
         match key {
+            Settings::SwapDpadRightStick => self.get("setting_swap_dpad_right_stick"),
             Settings::Keyboard => self.get("setting_keyboard"),
             Settings::ModeChangeHotKeyButtons => self.get("setting_mode_change_hot_key_buttons"),
             Settings::ModeChangeHotKeyDurationMs => {

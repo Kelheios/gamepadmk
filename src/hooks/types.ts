@@ -1,6 +1,7 @@
 export enum SettingKey {
   AutoStart = "setting_auto_start",
   DarkMode = "setting_dark_mode",
+  SwapDpadRightStick = "setting_swap_dpad_right_stick",
   Keyboard = "setting_keyboard",
   KeyboardBaseKeySize = "setting_keyboard_base_key_size",
   ModeChangeHotKeyButtons = "setting_mode_change_hot_key_buttons",
@@ -12,6 +13,7 @@ export enum SettingKey {
 export interface SettingType {
   [SettingKey.AutoStart]: boolean;
   [SettingKey.DarkMode]: boolean;
+  [SettingKey.SwapDpadRightStick]: boolean;
   [SettingKey.Keyboard]: boolean;
   [SettingKey.KeyboardBaseKeySize]: number;
   [SettingKey.ModeChangeHotKeyButtons]: string[];

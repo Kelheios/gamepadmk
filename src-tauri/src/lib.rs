@@ -69,6 +69,14 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|_, event| {
+            if matches!(
+                event,
+                tauri::RunEvent::ExitRequested { .. } | tauri::RunEvent::Exit
+            ) {
+                gamepad_mouse_keyboard_helper::release_arrow_keys_on_exit();
+            }
+        });
 }

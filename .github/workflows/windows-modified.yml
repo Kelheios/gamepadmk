@@ -1,0 +1,66 @@
+name: Build GamePadMK Modified Windows
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, feature/swap-dpad-right-stick]
+
+permissions:
+  contents: read
+
+jobs:
+  windows-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Check TypeScript and build frontend
+        run: npm run build
+      - name: Build SDL2
+        uses: johnwason/vcpkg-action@v5
+        with:
+          pkgs: sdl2
+          triplet: x64-windows-static-md
+          cache-key: windows-modified-x64
+          revision: master
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check Rust formatting of changed modules
+        run: rustfmt --check --edition 2021 --config skip_children=true src-tauri/src/lib.rs src-tauri/src/setting_manager/mod.rs src-tauri/src/gamepad_mouse_keyboard_helper/mod.rs src-tauri/src/gamepad_mouse_keyboard_helper/arrow_keys.rs src-tauri/src/gamepad_mouse_keyboard_helper/virtual_mouse.rs
+      - name: Check and test Rust
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+        run: |
+          cargo check --locked --manifest-path src-tauri/Cargo.toml
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --manifest-path src-tauri/Cargo.toml --lib
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo clippy --locked --manifest-path src-tauri/Cargo.toml --all-targets
+      - name: Build Windows EXE installer
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+        run: npm run tauri build -- --bundles nsis
+      - name: Prepare installer download
+        shell: pwsh
+        run: |
+          $installers = @(Get-ChildItem src-tauri/target/release/bundle/nsis/*-setup.exe)
+          if ($installers.Count -ne 1) { throw "Expected one NSIS installer; found $($installers.Count)" }
+          New-Item -ItemType Directory -Path installer
+          Copy-Item $installers[0].FullName installer/GamePadMK-Modified-Setup.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GamePadMK-Modified-Windows-x64
+          path: installer/GamePadMK-Modified-Setup.exe
+          if-no-files-found: error
